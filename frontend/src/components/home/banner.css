@@ -1,0 +1,16 @@
+/* this is only for images and tro display in main compo sets css to diosplay below nav */
+.banner_img {
+  width: 100vw;
+  height: 280px;
+}
+
+.carasousel {
+  margin-top: 10;
+}
+
+@media (max-width: 768px) {
+  .banner_img {
+    object-fit: cover;
+    height: 180px;
+  }
+}
