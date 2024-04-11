@@ -3,8 +3,10 @@ import React from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { Divider } from "@mui/material";
-import { products } from "./productData";
+//import { products } from "./productData";
 import "./slide.css";
+import { Link } from "react-router-dom";
+
 const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1024 },
@@ -20,12 +22,13 @@ const responsive = {
   },
 };
 // when using bootstrap direct copy and pste iunside return removbe div because inclkude in that and in this case
-const Slide = (props) => {
+const Slide = ({ title, productdata }) => {
   return (
     <div className="products_section">
       {/* this is seq first want titlr then bt then divider then carasouyl and in that way we frame component in maincom and in app.js */}
       <div className="products_deal">
-        <h3>{props.title}</h3>
+        {/* <h3>{props.title}</h3> if we receive props in func */}
+        <h3>{title}</h3>
         <button className="view_btn">View All</button>
       </div>
       <Divider></Divider>
@@ -46,18 +49,22 @@ const Slide = (props) => {
         containerClass="carousel-container"
       >
         {/* // like in other proj we pass when map to cart item as props or ele and display carts and in that carasouel auto display as cart with all data need to give some css in this no cart inside carosoulk auto display these images with thi sdata but need to give styling */}
-        {products.map((e) => {
-          return (
-            <div className="products_items">
-              <div className="product_img">
-                <img src={e.url} alt="product item" />
-              </div>
-              <p className="products_name">{e.title.shortTitle}</p>
-              <p className="products_offer">{e.discount}</p>
-              <p className="products_explore">{e.tagline}</p>
-            </div>
-          );
-        })}
+        {Array.isArray(productdata) &&
+          productdata.map((e) => {
+            return (
+              // two id we have one created by mongo and we have created
+              <Link to={`/getproductsone/${e.id}`}>
+                <div className="products_items">
+                  <div className="product_img">
+                    {<img src={e.url} alt="product item" />}
+                  </div>
+                  <p className="products_name">{e.title.shortTitle}</p>
+                  <p className="products_offer">{e.discount}</p>
+                  <p className="products_explore">{e.tagline}</p>
+                </div>
+              </Link>
+            );
+          })}
       </Carousel>
     </div>
   );
