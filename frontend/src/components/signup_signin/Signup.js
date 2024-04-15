@@ -17,6 +17,41 @@ const Signup = () => {
       };
     });
   };
+  const senddata = async (e) => {
+    //not load page on click of btn
+    e.preventDefault();
+    const { yname, email, mobile, password, cpassword } = udata;
+
+    const response = await fetch("/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      //or this ist yname is db field name amnd seconf yname that data pass,yname:udata.yname or yname:yname=yname
+      body: JSON.stringify({
+        yname,
+        email,
+        mobile,
+        password,
+        cpassword,
+      }),
+    });
+
+    const data = await response.json();
+    //console.log(data);
+    if (response.status === 422 || !data) {
+      alert("no data");
+    } else {
+      alert("data successfully added");
+      setUpdate({
+        yname: "",
+        email: "",
+        mobile: "",
+        password: "",
+        cpassword: "",
+      });
+    }
+  };
   return (
     <section>
       {/* this is everywhere main div and inside all divs for everything  */}
@@ -28,7 +63,7 @@ const Signup = () => {
           ></img>
         </div>
         <div className="sign_form">
-          <form>
+          <form method="post">
             <h1>Sign-Up</h1>
             <div className="form_data">
               <label htmlFor="yname">Your name</label>
@@ -40,6 +75,7 @@ const Signup = () => {
                 id="email"
               />
             </div>
+            {/* html for name =same value like email and same use in usestate hook and same in backend fields */}
             <div className="form_data">
               <label htmlFor="email">Email</label>
               <input
@@ -80,7 +116,9 @@ const Signup = () => {
                 id="email"
               />
             </div>
-            <button className="signin_btn">Continue</button>
+            <button className="signin_btn" onClick={senddata}>
+              Continue
+            </button>
             {/* want isnide border and container */}
             <div className="signin_info">
               <p>Already have an account</p>
