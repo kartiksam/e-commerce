@@ -44,6 +44,7 @@ const Signup = () => {
     } else {
       alert("data successfully added");
       setUpdate({
+        ...udata,
         yname: "",
         email: "",
         mobile: "",

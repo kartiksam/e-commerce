@@ -2,6 +2,7 @@ const express = require("express");
 const router = new express.Router();
 const Products = require("./../models/productSchema");
 const Users = require("./../models/userSchema");
+const bcrypt = require("bcryptjs");
 //get products data
 router.get("/getproducts", async (req, res) => {
   try {
@@ -62,6 +63,34 @@ router.post("/register", async (req, res) => {
     }
   } catch (error) {
     res.status(422).json({ error: "error in saving the data" });
+  }
+});
+
+//Login user api
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    res.status(400).json({ error: "fill the all data" });
+  }
+
+  try {
+    const userLogin = await Users.findOne({ email: email });
+
+    if (userLogin) {
+      //compare pass word come fro, frontend and userlogin ka pass
+      const isMatch = await bcrypt.compare(password, userLogin.password);
+      //how to show thee error msgs sent in frontend
+      console.log(isMatch);
+      console.log(userLogin);
+      if (!isMatch) {
+        //if not match then this msg go to frontend in data
+        res.status(400).json({ error: "Invalid details" });
+      } else {
+        res.status(201).json(userLogin);
+      }
+    }
+  } catch (error) {
+    res.status(400).json({ error: "Invalid details" });
   }
 });
 module.exports = router;
