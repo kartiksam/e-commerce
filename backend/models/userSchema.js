@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+const secretKey = process.env.KEY;
 //same fields name in frontend in inout in the name="email" like this and same in usestate
 //token -req.user.id or others fields req.body
 const userSchema = new mongoose.Schema({
@@ -55,6 +58,22 @@ userSchema.pre("save", async function (next) {
   }
   next();
 });
+
+//token generate process using instancwe method of mongoose
+//use this way when some data already in db and need to add other data
+userSchema.methods.generateAuthToken = async function () {
+  try {
+    //jwt ned two things payload in which provide user id and other is secret key store as token in encrypted format
+    let token_one = jwt.sign({ _id: this._id }, secretKey);
+    this.tokens = this.tokens.concat({ token: token_one });
+
+    //save token
+    await this.save();
+    return token_one;
+  } catch (error) {
+    console.log(error);
+  }
+};
 //collection name if given "USER",userSchema-then saves in format users
 const Users = new mongoose.model("users", userSchema);
 

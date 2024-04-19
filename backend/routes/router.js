@@ -79,15 +79,21 @@ router.post("/login", async (req, res) => {
     if (userLogin) {
       //compare pass word come fro, frontend and userlogin ka pass
       const isMatch = await bcrypt.compare(password, userLogin.password);
+      //await means wait here until this promise is not reloved and then go to next line first resolve it
       //how to show thee error msgs sent in frontend
       console.log(isMatch);
       console.log(userLogin);
+      //token generate and when user login then userlogi will found and till that tokens empty and in that user tokens section token will be added and in previous once user sigup or login then in notes we add tjhat userobj id and from onre tokenm many otes and then we find all notes corresponding to userobj id store  from one token many notesd and from one login then we can fetch tht all notes
+      const token = await userLogin.generateAuthToken();
+      console.log("token" + token);
       if (!isMatch) {
         //if not match then this msg go to frontend in data
         res.status(400).json({ error: "Invalid details" });
       } else {
         res.status(201).json(userLogin);
       }
+    } else {
+      res.status(400).json({ error: "Invalid details" });
     }
   } catch (error) {
     res.status(400).json({ error: "Invalid details" });
